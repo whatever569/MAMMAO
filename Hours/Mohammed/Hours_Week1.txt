@@ -1,0 +1,6 @@
+Sep 5th, 2023
+
+9:00 - 10:35 : Had meeting, told the team about the tools we will use to coordinate the project like trello and github
+                assigned roles, ozgur is the chairperson and atilla is the minutes secretary, got components for the project
+10:35 - 11:15 : set up the github and trello
+11:15 - 13:00 : helped the team setting up github, continued meeting 
