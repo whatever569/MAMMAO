@@ -1,0 +1,28 @@
+- 05.09.23
+    - plan
+        - specifications
+            - deadline 16.09
+            - lists the functionality
+        - first goals
+            - functional prototype
+                - smart criteria
+                    - prioritize functionalities
+            - make it a product
+            - everyone has to learn to program in C (for the Arduino)
+    - *everything* has to be documented
+    - components
+        - 2 plexiglass
+            - screws, spacers
+        - wheels
+        - battery pack
+        - sensors are missing
+            - [x]  1 ultrasonic
+            - [x]  2 light-sensitive diodes
+        - needed
+            - [ ]  reflector
+            - [x]  1 LED module
+            - [ ]  LEDs
+            - [x]  BT module
+    - stages
+        - 9:00 - 10:35
+        - 11:15 - 13:00
