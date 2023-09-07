@@ -4,3 +4,7 @@ Sep 5th, 2023
                 assigned roles, ozgur is the chairperson and atilla is the minutes secretary, got components for the project
 10:35 - 11:15 : set up the github and trello
 11:15 - 13:00 : helped the team setting up github, continued meeting 
+15:00 - 15:10 : meeting with peter bijl to discuss functional and technical specifications
+
+Sep 7th, 2023
+8:50 - 10:12 : learning arduino
