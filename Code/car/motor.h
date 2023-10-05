@@ -17,6 +17,17 @@ int min_power = 102;
 int interval = 17;
 int power_mode = 10;      // Currently there are 10 power modes
 
+void motor_setup() {
+  // Initialize the motor control pins as outputs
+  pinMode(motor1IN1, OUTPUT);   // Left wheels forward
+  pinMode(motor1IN2, OUTPUT);   // Left wheels backward
+  pinMode(motor1EN, OUTPUT);    // Left wheels enable pin
+
+  pinMode(motor2IN3, OUTPUT);   // Right wheels forward
+  pinMode(motor2IN4, OUTPUT);   // Right wheels backward
+  pinMode(motor2EN, OUTPUT);    // Right wheels enable pin
+}
+
 void forward() {
   digitalWrite(motor1IN1, HIGH);
   analogWrite(motor1EN, power);
