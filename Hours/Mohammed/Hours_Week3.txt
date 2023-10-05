@@ -13,3 +13,4 @@
 24 sep, 2023:
 
 8:00 - 13:20 : worked on product report and reporting and documentation of the EEPROM code
+]
