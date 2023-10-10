@@ -1,3 +1,10 @@
 3 oct, 2023
 
-12:30 - 
+12:30 - 16:00 : did some work on code refactoring
+
+oct 4th, 2023
+
+
+oct 7th, 2023
+
+15:10 - 17:20 : added diagrams and debugged my automated mode code
