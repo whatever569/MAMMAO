@@ -4,12 +4,7 @@
 //24.09.2023
 
 #include <EEPROM.h>
-
-// Define the EEPROM address where the total system time is stored
-#define TOTAL_SYSTEM_TIME_ADDRESS 0
-
-// Function to retrieve the previous total system time from EEPROM
-unsigned long get_previous_total_system_time();
+#include "headers/STORAGE.h"
 
 // Function to add a given time value to the total system time stored in EEPROM
 void add_time_to_eeprom_total_system_time(unsigned long time)
