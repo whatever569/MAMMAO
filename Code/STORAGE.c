@@ -1,7 +1,6 @@
 //Written by Mohammed Alzuaa
 //Student Number: 2135835
 //Project Group 11
-//24.09.2023
 
 #include <EEPROM.h>
 #include "headers/STORAGE.h"

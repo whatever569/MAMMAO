@@ -1,3 +1,7 @@
+//Written by Mohammed Alzuaa
+//Student Number: 2135835
+//Project Group 11
+
 #include "headers/ULTRASONIC.h"
 
 void ultrasonic_sensors_check(float results[],

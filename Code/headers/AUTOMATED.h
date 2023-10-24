@@ -1,3 +1,7 @@
+//Written by Mohammed Alzuaa
+//Student Number: 2135835
+//Project Group 11
+
 #ifndef AUTOMATED_H
 #define AUTOMATED_h
 

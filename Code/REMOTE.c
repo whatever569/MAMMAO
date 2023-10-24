@@ -1,4 +1,4 @@
-#include "headers/REMOTE"
+#include "headers/REMOTE.h"
 
 void remote_setup() {
   BT.begin(9600); // Initialize the bt serial connection

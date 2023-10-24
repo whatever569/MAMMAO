@@ -1,7 +1,5 @@
-#define irL 5
-#define irR 12
-#include "ULTRASONIC.c"
-#include "headers/MOTOR.h"
+#include "headers/IR.h"
+#include "headers/MOTORS.h"
 
 void ir_setup()
 {
@@ -11,25 +9,25 @@ void ir_setup()
 
 void line_tracking()
 {
-  if (close(results[0], results[1], results[2]))
+  if (isClose(results[0], results[1], results[2]))
   {
-    Stop();
+    stop();
   }
-  else if (!close(results[0], results[1], results[2]) && digitalRead(irL) == HIGH)
+  else if (!isClose(results[0], results[1], results[2]) && digitalRead(irL) == HIGH)
   {
-    Left();
+    left();
   }
-  else if (!close(results[0], results[1], results[2]) && digitalRead(irR) == HIGH)
+  else if (!isClose(results[0], results[1], results[2]) && digitalRead(irR) == HIGH)
   {
-    Right();
+    right();
   }
   else
   {
-    Forward();
+    forward();
   }
 }
 
-bool close(float a, float b, float c)
+bool isClose(float a, float b, float c)
 {
   if (a > 10 && b > 10 && c > 10)
   {

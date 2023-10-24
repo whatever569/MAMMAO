@@ -1,4 +1,9 @@
+//Written by Mohammed Alzuaa
+//Student Number: 2135835
+//Project Group 11
+
 #include "headers/AUTOMATED.h"
+#include "headers/MOTOR.h"
 
 void backward_and_turn_180_non_blocking() {
     unsigned long currentMillis = millis();

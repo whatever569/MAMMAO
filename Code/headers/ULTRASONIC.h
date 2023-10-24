@@ -1,3 +1,6 @@
+//Written by Mohammed Alzuaa
+//Student Number: 2135835
+//Project Group 11
 #ifndef ULTRASONIC_H
 #define ULTRASONIC_H
 
