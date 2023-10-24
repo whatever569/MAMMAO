@@ -1,11 +1,24 @@
-int mode_to_be_activated = 1;
+enum Mode{
+  AUTOMATED,
+  LINE_TRACKING,
+  REMOTE
+}
+
+Mode mode = AUTOMATED;
 void setup() {
   Serial.begin(19200);
-  // remote_setup();
-  // motor_setup();
-  ultrasonic_sensors_setup(trig_ultrasonic_sensor, echo_ultrasonic_sensor, num_ultrasonic_sensors);
+  remote_setup();
 }
 
 void loop() {  
-activate_automated_mode();
+
+switch (mode)
+{
+  case AUTOMATED:
+    activate_automated_mode();
+  case LINE_TRACKING:
+
+  case REMOTE:
+    remote();
+}
 }
