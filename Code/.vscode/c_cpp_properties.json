@@ -3,8 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/car/S9_Automated_Mode"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
             "macFrameworkPath": [

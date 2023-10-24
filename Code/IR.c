@@ -1,6 +1,6 @@
 #include "headers/IR.h"
-#include "headers/MOTORS.h"
-
+#include "headers/MOTOR.h"
+#include "headers/PINS.h"
 void ir_setup()
 {
   pinMode(irL, INPUT);
@@ -9,6 +9,7 @@ void ir_setup()
 
 void line_tracking()
 {
+  ultrasonic_sensors_check(results, ultrasonic_sensors_pins[], num_ultrasonic_sensors, num_ultrasonic_samples);
   if (isClose(results[0], results[1], results[2]))
   {
     stop();

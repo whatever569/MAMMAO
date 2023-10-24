@@ -5,6 +5,8 @@
 #define irR 12
 #include "headers/ULTRASONIC.h"
 #include "headers/MOTOR.h"
+#include "headers/PINS.h"
+int results[num_ultrasonic_sensors];
 
 void ir_setup();
 void line_tracking();
