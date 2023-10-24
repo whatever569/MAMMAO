@@ -30,6 +30,7 @@ void LCDSetup() {
 }
 
 void updateTimeCount() {
+  elapsedTime = millis();
   if (elapsedTime - previousUpdateTime >= TST_UPDATE_INTERVAL) {
 
     // Counting the elapsed seconds
@@ -79,12 +80,11 @@ unsigned long currentTime () { //called when you save the total system time
 
 void LCDMode() {
   lcd.setCursor(4, 1);
-  //get_mode();
-
-  switch (drivingMode) {
-    case 0: lcd.print("A.s"); break;
-    case 1: lcd.print("S.r"); break;
-    case 2: lcd.print("R.a"); break;
+  
+  switch (mode) {
+    case AUTOMATED: lcd.print("A.s"); break;
+    case LINE_TRACKING: lcd.print("S.r"); break;
+    case REMOTE: lcd.print("R.a"); break;
   }
 }
 
@@ -101,25 +101,40 @@ void LCD_speed() {
 
 void LCDDirection() {
   lcd.setCursor (15, 1);
-  // get_direction();
 
-  switch (carDirection) {        
-    case 0: lcd.print("^"); break;
-    case 1: lcd.print("v"); break;
-    case 2: lcd.print(">"); break;
-    case 3: lcd.print("<"); break;
+  switch (direction) {        
+    case FORWARD: lcd.print("^"); break;
+    case BACKWARD: lcd.print("v"); break;
+    case RIGHT: lcd.print(">"); break;
+    case LEFT: lcd.print("<"); break;
   }
 }
 
 void LCDTST () {
-  updateTimeCount();
-  updateDisplay();
-  currentTime ();
+ updateTimeCount ();
+  if (digitalRead(saveButton) == LOW) { // Read wheter the button is pressed
+    savingState = 1; 
+    LCDSaving = elapsedTime;
+  }   
+  if (savingState == 1) {    // Start counting when the button is pressed
+    if (elapsedTime - LCDSaving >= TST_SAVING_INTERVAL && elapsedTime - LCDSaving <= TST_DISPLAYSAVE_TIME) {    // give the microcontroller time to save and keep the text printed for certain time
+      lcd.setCursor(4, 0);
+      lcd.print ("Saved ");  
+    }
+    else if (elapsedTime - LCDSaving > TST_DISPLAYSAVE_TIME) {    //after Saved has been displayed for enough time, revert the TST display back to its normal state.
+    savingState = 0;
+    lcd.setCursor(4, 0);
+    lcd.print (" 00:00");
+    }
+  }
+  if (savingState == 0) {
+    updateDisplay ();
+    currentTime ();
+  }
 }
  
 
 void LCDLoop() {
-  elapsedTime = millis();
   LCDTST();
 
   if (elapsedTime - previousUpdateTime >= TST_LCD_REFRESH) { // refresh the LCD
