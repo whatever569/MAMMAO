@@ -79,9 +79,7 @@ unsigned long current_time () { //called when you save the total system time
 
 void LCD_mode() {
   lcd.setCursor(4, 1);
-  //get_mode();
-
-  switch (driving_mode) {
+  switch (mode) {
     case 0: lcd.print("A.s"); break;
     case 1: lcd.print("S.r"); break;
     case 2: lcd.print("R.a"); break;
