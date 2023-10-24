@@ -7,10 +7,14 @@ LiquidCrystal_I2C lcd(0x27 ,16, 2); // Setting the I2C adress as 0x27, LCD colum
 unsigned long totalSystemTime = 0;
 const long TST_LCD_REFRESH = 1000;
 const long TST_UPDATE_INTERVAL = 1000;
+const long TST_SAVING_INTERVAL = 100;
+const long TST_DISPLAYSAVE_TIME = 3000;
 
 unsigned long elapsedTime = 0;
 unsigned long previousUpdateTime = 0;
 unsigned long previousElapsedSecond = 0;
+unsigned long LCDSaving = 0;
+unsigned long saving_State = 0;
 
 unsigned long TSTElapsedSecond = 0;
 unsigned long TSTElapsedMinutes = 0;
