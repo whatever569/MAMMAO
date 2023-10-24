@@ -1,6 +1,6 @@
 #include "headers/REMOTE.h"
 
-void remote_setup() {
+void remoteSetup() {
   BT.begin(9600); // Initialize the bt serial connection
 }
 
@@ -18,7 +18,7 @@ void remote() {
     }
     case 'E':
     {
-      forward_right();
+      forwardRight();
       break;
     }
     case 'R':
@@ -38,7 +38,7 @@ void remote() {
     }
     case 'Q':
     {
-      forward_left();
+      forwardLeft();
       break;
     }
     case 'S':

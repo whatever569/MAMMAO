@@ -12,18 +12,18 @@ const int motor2IN4 = 9; // IN4 pin of L293D for Motor 2
 const int motor2EN = 10; // Enable pin for Motor 2 (PWM)
 
 int power = 255;         // 0-255
-int max_power = 255;
-int min_power = 102;
+int maxPower = 255;
+int minPower = 102;
 int interval = 17;
-int power_mode = 10;      // Currently there are 10 power modes
+int powerMode = 10;      // Currently there are 10 power modes
 
-void motor_setup();
+void motorSetup();
 void forward();
 void backward();
 void left();
-void forward_left();
+void forwardLeft();
 void right();
-void forward_right();
+void forwardRight();
 void stop();
 
 #endif

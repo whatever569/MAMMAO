@@ -1,6 +1,6 @@
 #include "headers/MOTOR.h"
 
-void motor_setup() {
+void motorSetup() {
   // Initialize the motor control pins as outputs
   pinMode(motor1IN1, OUTPUT);   // Left wheels forward
   pinMode(motor1IN2, OUTPUT);   // Left wheels backward
@@ -32,7 +32,7 @@ void left() {
   analogWrite(motor2EN, power);
 }
 
-void forward_left() {
+void forwardLeft() {
   digitalWrite(motor1IN1, HIGH);
   analogWrite(motor1EN, 64 * (power / max_power));
   digitalWrite(motor2IN4, HIGH);
@@ -46,7 +46,7 @@ void right() {
   analogWrite(motor2EN, power);
 }
 
-void forward_right() {
+void forwardRight() {
   digitalWrite(motor1IN1, HIGH);
   analogWrite(motor1EN, power);
   digitalWrite(motor2IN4, HIGH);
