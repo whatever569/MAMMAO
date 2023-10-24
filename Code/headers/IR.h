@@ -6,10 +6,10 @@
 #include "headers/ULTRASONIC.h"
 #include "headers/MOTOR.h"
 #include "headers/PINS.h"
-int results[num_ultrasonic_sensors];
+int results[numUltrasonicSensors];
 
-void ir_setup();
-void line_tracking();
+void irSetup();
+void lineTracking();
 bool isClose();
 
 #endif

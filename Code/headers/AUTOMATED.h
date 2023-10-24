@@ -10,10 +10,10 @@
 
 // Global Variables
 float results[3];
-bool are_sensors_too_close[3];
+bool areSensorsTooClose[3];
 unsigned long previousMillis = 0;
-long sensor_check_interval = 500;  // sensor_checksensor_check_interval to check sensors (in milliseconds)
-bool is_moving_backwards_and_turning_180 = false;
+long sensorCheckInterval = 500;  // sensor_checksensor_check_interval to check sensors (in milliseconds)
+bool isMovingBackwardsAndTurning180 = false;
 unsigned long previousMillisTurn = 0;
 
 enum State
@@ -22,9 +22,9 @@ enum State
     LEFT
 };
 
-State current_state = BACKWARD;
+State currentState = BACKWARD;
 
 // Function Prototypes
-void check_ultrasonic_sensors();
-void decide_movement();
+void checkUltrasonicSensors();
+void decideMovement();
 #endif

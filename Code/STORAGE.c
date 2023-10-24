@@ -6,30 +6,30 @@
 #include "headers/STORAGE.h"
 
 // Function to add a given time value to the total system time stored in EEPROM
-void add_time_to_eeprom_total_system_time(unsigned long time)
+void addTimeToEepromTotalSystemTime(unsigned long time)
 {
   // Calculate the new total system time by adding the given time to the previous total
-  unsigned long new_time = get_previous_total_system_time() + time;
+  unsigned long newTime = getPreviousTotalSystemTime() + time;
 
   // Store the updated total system time back in EEPROM
-  EEPROM.put(TOTAL_SYSTEM_TIME_ADDRESS, new_time);
+  EEPROM.put(totalSystemTimeAddress, newTime);
 
 
 }
 
 // Function to retrieve the previous total system time from EEPROM
-unsigned long get_previous_total_system_time()
+unsigned long getPreviousTotalSystemTime()
 {
-  unsigned long previous_total_system_time;
+  unsigned long previousTotalSystemTime;
   
   // Read the previous total system time from EEPROM
-  EEPROM.get(TOTAL_SYSTEM_TIME_ADDRESS, previous_total_system_time);
+  EEPROM.get(totalSystemTimeAddress, previousTotalSystemTime);
   
-  return previous_total_system_time;
+  return previousTotalSystemTime;
 }
 
 // Function to erase all data stored in EEPROM (set to 0)
-void erase_eeprom()
+void eraseEEPROM()
 {
   // Loop through each EEPROM address and write 0 to erase the data
   for(int i = 0; i < 1024; i++) EEPROM.write(i, 0);

@@ -19,14 +19,14 @@
  * @param results: An array that will store the distance calculated for each
  *        sensor. The array should be initialized with the same length as
  *        the number of sensors.
- * @param ultrasonic_sensors_pins: An array of pins used to trigger and echo
+ * @param ultrasonicSensorsPins: An array of pins used to trigger and echo
  *        the ultrasonic sensors.
- * @param num_sensors: The number of ultrasonic sensors being used.
- * @param num_samples: The number of samples per sensor, to reduce noise.
+ * @param numSensors: The number of ultrasonic sensors being used.
+ * @param numSamples: The number of samples per sensor, to reduce noise.
  * TIP:  To use this, create an array of results with the number of sensors you are using, this function will then edit that array everytime it gets called.
  */
-void ultrasonic_sensors_check(float results[],
-                              const int ultrasonic_sensors_pins[],
-                              const int num_sensors, const int num_samples);
+void ultrasonicSensorsCheck(float results[],
+                              const int ultrasonicSensorsPins[],
+                              const int numSensors, const int numSamples);
 
 #endif
