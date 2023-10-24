@@ -1,0 +1,66 @@
+#include "MotorDrive.h"
+#ifndef MOTOR_H
+#define MOTOR_H
+
+const int motor1IN1 = 3;
+const int motor1IN2 = 5;
+const int motor2IN3 = 6;
+const int motor2IN4 = 9;
+int motorspeeds = 0;
+int forthspeeds = 0; 
+
+void motor_setup() {
+  pinMode(motor1IN1, OUTPUT);   // Left wheels forward
+  pinMode(motor1IN2, OUTPUT);   // Left wheels backward
+  pinMode(motor2IN3, OUTPUT);   // Right wheels forward
+  pinMode(motor2IN4, OUTPUT);   // Right wheels backward
+}
+void forward(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorspeeds);  
+  digitalWrite(motor2IN4, 0); 
+  analogWrite(motor2IN3, motorspeeds);
+}
+void backward(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorspeeds);  
+  digitalWrite(motor2IN3, 0); 
+  analogWrite(motor2IN4, motorspeeds);
+}
+void left(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, forthspeeds);
+  digitalWrite(motor2IN4, 0);
+  analogWrite(motor2IN3, motorspeeds);
+}
+void right(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorspeeds);
+  digitalWrite(motor2IN4, 0);
+  analogWrite(motor2IN3, forthspeeds);  
+}
+void backward_left(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorspeeds);  
+  digitalWrite(motor2IN3, 0); 
+  analogWrite(motor2IN4, forthspeeds);  
+}
+void backward_right(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, forthspeeds);  
+  digitalWrite(motor2IN3, 0); 
+  analogWrite(motor2IN4, motorspeeds); 
+}
+void forward_left(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorspeeds); 
+  analogWrite(motor2IN3, motorspeeds);
+  digitalWrite(motor2IN4, 0);
+}
+void forward_right(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorspeeds);
+  analogWrite(motor2IN4, motorspeeds);
+  digitalWrite(motor2IN3, 0);
+}
+
