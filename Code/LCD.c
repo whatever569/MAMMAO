@@ -1,4 +1,5 @@
 #include "headers/LCD.h"
+#include "headers/SELECT.h"
 
 void LCDSetup() {
   //get_previous_total_system_time();  
@@ -79,9 +80,7 @@ unsigned long currentTime () { //called when you save the total system time
 
 void LCDMode() {
   lcd.setCursor(4, 1);
-  //get_mode();
-
-  switch (drivingMode) {
+  switch (mode) {
     case 0: lcd.print("A.s"); break;
     case 1: lcd.print("S.r"); break;
     case 2: lcd.print("R.a"); break;

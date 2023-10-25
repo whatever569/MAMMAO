@@ -1,63 +1,71 @@
 #include "headers/MOTOR.h"
+#include "headers/PINS.h"
 
+int speed(int x){
+  motorSpeed = map(x, 0, 9, 0, 255);
+	turningSpeed = motorSpeed / 4;
+  return motorSpeed;
+}
+// Function to set up the motor pins
 void motorSetup() {
-  // Initialize the motor control pins as outputs
   pinMode(motor1IN1, OUTPUT);   // Left wheels forward
   pinMode(motor1IN2, OUTPUT);   // Left wheels backward
-  pinMode(motor1EN, OUTPUT);    // Left wheels enable pin
-
   pinMode(motor2IN3, OUTPUT);   // Right wheels forward
-  pinMode(motor2IN4, OUTPUT);   // Right wheels backward
-  pinMode(motor2EN, OUTPUT);    // Right wheels enable pin
+  pinMode(motor2IN4, OUTPUT);   // Right wheels backward           
 }
-
-void forward() {
-  digitalWrite(motor1IN1, HIGH);
-  analogWrite(motor1EN, power);
-  digitalWrite(motor2IN4, HIGH);
-  analogWrite(motor2EN, power);
+// Function to move forward
+void forward(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorSpeed);  
+  digitalWrite(motor2IN4, 0); 
+  analogWrite(motor2IN3, motorSpeed);
 }
-
-void backward() {
-  digitalWrite(motor1IN2, HIGH);
-  analogWrite(motor1EN, power);
-  digitalWrite(motor2IN3, HIGH);
-  analogWrite(motor2EN, power);
+// Function to move backward
+void backward(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorSpeed);  
+  digitalWrite(motor2IN3, 0); 
+  analogWrite(motor2IN4, motorSpeed);
 }
-
-void left() {
-  digitalWrite(motor1IN2, HIGH);
-  analogWrite(motor1EN, power);
-  digitalWrite(motor2IN4, HIGH);
-  analogWrite(motor2EN, power);
+// Function to turn left
+void left(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, turningSpeed);
+  digitalWrite(motor2IN4, 0);
+  analogWrite(motor2IN3, motorSpeed);
 }
-
-void forwardLeft() {
-  digitalWrite(motor1IN1, HIGH);
-  analogWrite(motor1EN, 64 * (power / max_power));
-  digitalWrite(motor2IN4, HIGH);
-  analogWrite(motor2EN, power);
+// Function to turn right
+void right(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorSpeed);
+  digitalWrite(motor2IN4, 0);
+  analogWrite(motor2IN3, turningSpeed);  
 }
-
-void right() {
-  digitalWrite(motor1IN1, HIGH);
-  analogWrite(motor1EN, power);
-  digitalWrite(motor2IN3, HIGH);
-  analogWrite(motor2EN, power);
+// Function to move backward and turn left
+void backwardLeft(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorSpeed);  
+  digitalWrite(motor2IN3, 0); 
+  analogWrite(motor2IN4, turningSpeed);  
 }
-
-void forwardRight() {
-  digitalWrite(motor1IN1, HIGH);
-  analogWrite(motor1EN, power);
-  digitalWrite(motor2IN4, HIGH);
-  analogWrite(motor2EN, 64 * (power / max_power));
+// Function to move backward and turn right
+void backwardRight(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, turningSpeed);  
+  digitalWrite(motor2IN3, 0);                                                                                                          
+  analogWrite(motor2IN4, motorSpeed); 
 }
-
-void stop() {
-  digitalWrite(motor1IN1, LOW);
-  digitalWrite(motor1IN2, LOW);
-  digitalWrite(motor2IN3, LOW);
-  digitalWrite(motor2IN4, LOW);
-  analogWrite(motor1EN, 0);  // Stop the motor
-  analogWrite(motor2EN, 0);
+// Function to move forward and turn left
+void forwardLeft(){
+  digitalWrite(motor1IN1, 0);
+  analogWrite(motor1IN2, motorSpeed); 
+  analogWrite(motor2IN3, motorSpeed);
+  digitalWrite(motor2IN4, 0);
+}
+// Function to move forward and turn right
+void forwardRight(){
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, motorSpeed);
+  analogWrite(motor2IN4, motorSpeed);
+  digitalWrite(motor2IN3, 0);
 }

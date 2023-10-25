@@ -4,6 +4,8 @@
 
 #include "headers/AUTOMATED.h"
 #include "headers/MOTOR.h"
+#include "headers/PINS.h"
+#include "ULTRASONIC.h"
 
 void backwardAndTurn180NonBlocking() {
     unsigned long currentMillis = millis();
@@ -44,7 +46,7 @@ void activateAutomatedMode() {
 }
 
 void checkUltrasonicSensors() {
-    ultrasonicSensorsCheck(results, trig_ultrasonic_sensor, echo_ultrasonic_sensor, numUltrasonicSensors, 2);
+    ultrasonicSensorsCheck(results, ultrasonicSensorsPins, numUltrasonicSensors, 2);
     
     // Logging
     Serial.print(results[0]); Serial.print(" "); Serial.print(results[1]); Serial.print(" "); Serial.println(results[2]);
