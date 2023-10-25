@@ -54,17 +54,19 @@ void remote() {
     }
     case 'Y':
     {
-      if (speed < 10)
+      if (carSpeed < 9)
       {
-        speed++;
+        carSpeed++;
+        speed();
       }
       break;
     }
     case 'X':
     {
-      if (speed >= 0)
+      if (carSpeed >= 0)
       {
-        speed--;
+        carSpeed--;
+        speed();
       }
       break;
     }

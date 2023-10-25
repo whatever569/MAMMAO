@@ -9,8 +9,8 @@ int speed = 0;
 int motorSpeed = 0;
 int turningSpeed = 0;
 
-void speed(){
-  motorSpeed = map(speed, 0, 9, MINSPEED, MAXSPEED);
+void carSpeed(){
+  motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
 	turningSpeed = motorSpeed / 4;
 }
 // Function to set up the motor pins
