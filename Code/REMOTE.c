@@ -48,19 +48,17 @@ void remote() {
     }
     case 'Y':
     {
-      if (power < max_power)
+      if (speedMode < 10)
       {
-        power += interval;
-        power_mode++;
+        speedMode++;
       }
       break;
     }
     case 'X':
     {
-      if (power > min_power)
+      if (speedMode >= 0)
       {
-        power -= interval;
-        power_mode--;
+        speedMode--;
       }
       break;
     }

@@ -1,6 +1,10 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
+#define MINSPEED 0
+#define MAXSPEED 255
+
+int speedMode = 0;
 int motorSpeed = 0;
 int turningSpeed = 0;
 
