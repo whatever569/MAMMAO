@@ -11,6 +11,6 @@ const int motor1IN2 = 5;
 const int motor2IN3 = 6;
 const int motor2IN4 = 9;
 
-
+bool debugMode = false;
 
 #endif
