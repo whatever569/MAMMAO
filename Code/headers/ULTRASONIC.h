@@ -1,14 +1,15 @@
 //Written by Mohammed Alzuaa
 //Student Number: 2135835
 //Project Group 11
+
 #ifndef ULTRASONIC_H
 #define ULTRASONIC_H
 
-// Define the speed of sound in cm/microsecond. This constant is used for
-// distance calculations using the time taken for the ultrasonic wave to
-// reflect back.
 #define SPEED_OF_SOUND_IN_CM_PER_MICROSECOND 0.0343
+#define MAX_DISTANCE 200
+#define OUT_OF_RANGE 401
 
+bool isOutOfRange = false;
 /**
  * Calculates the distance of obstacles in front of each ultrasonic sensor
  * and updates the results array with the respective distances in centimeters.
@@ -25,6 +26,10 @@
  * @param numSamples: The number of samples per sensor, to reduce noise.
  * TIP:  To use this, create an array of results with the number of sensors you are using, this function will then edit that array everytime it gets called.
  */
+void ultrasonicSensorsCheck(float results[],
+                              const int ultrasonicSensorsPins[],
+                              const int numSensors, const int numSamples);
+                            
 
 void ultrasonicSensorsCheck(float results[],
                               const int ultrasonicSensorsPins[],
@@ -49,18 +54,28 @@ void ultrasonicSensorsCheck(float results[],
             pinMode(ultrasonicSensorsPins[i], INPUT);
             // Measure the time (in microseconds) taken for the echo to return
             float duration = pulseIn(ultrasonicSensorsPins[i], HIGH, 20000);
+            float distance;
             // Calculate the distance in centimeters based on the duration of the echo
             // The distance is half of the total travel distance of the sound wave
             // (to the obstacle and back)
-            float distance = (duration * SPEED_OF_SOUND_IN_CM_PER_MICROSECOND) / 2;
+            if(duration == 0)
+            {
+              isOutOfRange = true;
+            }
+            else {
+              isOutOfRange = false; 
+              distance = (duration * SPEED_OF_SOUND_IN_CM_PER_MICROSECOND) / 2;
+            }
 
             tempResult += distance;
-
+            delay(10);
         }
         // Update the results array with the average of the calculated for sensor i distance
-        results[i] = tempResult/numSamples;
+        if(isOutOfRange) results[i] = OUT_OF_RANGE;
+        else results[i] = tempResult/numSamples;
         delay(10);
     }
 }
 
 #endif
+ 
