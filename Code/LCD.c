@@ -89,9 +89,8 @@ void LCDMode() {
 }
 
 void LCD_speed() {
-  //get_speed();
   lcd.setCursor(15, 0);
-  if (carSpeed == 10) {
+  if (Speed == 10) {
     lcd.print("M");   // max speed is shown with a M, because there is only 1 space for printing the speed
   } 
   else {
