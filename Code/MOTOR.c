@@ -1,10 +1,9 @@
 #include "headers/MOTOR.h"
 #include "headers/PINS.h"
 
-int speed(int x){
-  motorSpeed = map(x, 0, 9, 0, 255);
+void speed(){
+  motorSpeed = map(speedMode, 0, 9, 0, 255);
 	turningSpeed = motorSpeed / 4;
-  return motorSpeed;
 }
 // Function to set up the motor pins
 void motorSetup() {
