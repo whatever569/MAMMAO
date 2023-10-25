@@ -2,56 +2,25 @@
 #include "headers/IR.h"
 #include "headers/PINS.h"
 #include "headers/AUTOMATED.h"
-#include "REMOTE.h"
+#include "headers/REMOTE.h"
+#include "headers/SELECT.h"
+#include "headers/STORAGE.h"
+#include "headers/LCD.h"
 
-enum Mode{
-  AUTOMATED,
-  LINE_TRACKING,
-  REMOTE
-}
-
-Mode mode = AUTOMATED;
 void setup() {
   Serial.begin(19200);
+
   remoteSetup();
+
+  motorSetup();
+  pinMode(modeSelector);
+  LCDSetup();
+
+  
 }
 
 void loop() {  
-=======
-<<<<<<< HEAD
-#include "ULTRASONIC.c"
-
-int modeToBeActivated = 1;
-void setup() {
-  Serial.begin(19200);
-  // remoteSetup();
-  // motorSetup();
-  ultrasonic_sensors_setup(trig_ultrasonic_sensor, echo_ultrasonic_sensor, numUltrasonicSensors);
-}
-
-void loop() {  
-activateAutomatedMode();
-=======
-#include "headers/IR.h"
-#include "headers/PINS.h"
-#include "headers/AUTOMATED.h"
-#include "REMOTE.h"
-
-enum Mode{
-  AUTOMATED,
-  LINE_TRACKING,
-  REMOTE
-}
-
-Mode mode = AUTOMATED;
-void setup() {
-  Serial.begin(19200);
-  remoteSetup();
-}
-
-void loop() {  
->>>>>>> Stashed changes
-
+modeSelection();
 switch (mode)
 {
   case AUTOMATED:
@@ -61,8 +30,4 @@ switch (mode)
   case REMOTE:
     remote();
 }
-<<<<<<< Updated upstream
-=======
->>>>>>> e894b15f5837957dc11c5f7fb9940c41308f94c3
->>>>>>> Stashed changes
 }
