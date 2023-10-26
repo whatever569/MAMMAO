@@ -18,6 +18,8 @@ void irSetup()
 
 void lineTracking()
 {
+  motorSpeed = MINSPEED;
+  carSpeed = 0;
   ultrasonicSensorsCheck(results, ultrasonicSensorsPins, numUltrasonicSensors, numUltrasonicSamples);
   if (isClose(results[0], results[1], results[2]))
   {

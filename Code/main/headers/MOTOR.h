@@ -1,23 +1,19 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
+#include "DATA.h"
 #include "PINS.h"
-#define MINSPEED 70
-#define MAXSPEED 255
 
 //Led blink delay and state
 int time;
 int blinkState;
+int delayMs = 250;
 bool ledLeft = false;
 bool ledRight = false;
-
-int carSpeed = 0;
-int motorSpeed = MINSPEED;
-int turningSpeed = motorSpeed;
-
-void speed(){
+void speed()
+{
   motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
-	turningSpeed = motorSpeed / 2;
+  turningSpeed = motorSpeed;
 }
 // Function to set up the motor pins
 void motorSetup() {
@@ -36,6 +32,7 @@ void forward(){
   analogWrite(motor2IN3, motorSpeed);
   ledLeft = false;
   ledRight = false;
+  direction = FORWARD;
 }
 // Function to move backward
 void backward(){
@@ -45,6 +42,7 @@ void backward(){
   analogWrite(motor2IN4, motorSpeed);
   ledLeft = true;
   ledRight = true;
+  direction = BACK;
 }
 // Function to turn left
 void left(){
@@ -54,6 +52,7 @@ void left(){
   analogWrite(motor2IN3, motorSpeed);
   ledLeft = true;
   ledRight = false;
+  direction = NOT_RIGHT;
 }
 // Function to turn right
 void right(){
@@ -63,6 +62,7 @@ void right(){
   analogWrite(motor2IN3, 0);
   ledLeft = false;
   ledRight = true;
+  direction = RIGHT;
 }
 // Function to move backward and turn left
 void backwardLeft(){
@@ -72,6 +72,7 @@ void backwardLeft(){
   analogWrite(motor2IN4, turningSpeed);
   ledLeft = true;
   ledRight = false;
+  direction = NOT_RIGHT;
 }
 // Function to move backward and turn right
 void backwardRight(){
@@ -81,6 +82,7 @@ void backwardRight(){
   analogWrite(motor2IN4, turningSpeed);
   ledLeft = false;
   ledRight = true;
+  direction = RIGHT;
 }
 // Function to move forward and turn left
 void forwardLeft(){
@@ -90,6 +92,7 @@ void forwardLeft(){
   digitalWrite(motor2IN4, 0);
   ledLeft = true;
   ledRight = false;
+  direction = NOT_RIGHT;
 }
 // Function to move forward and turn right
 void forwardRight(){
@@ -99,6 +102,7 @@ void forwardRight(){
   digitalWrite(motor2IN3, 0);
   ledLeft = false;
   ledRight = true;
+  direction = RIGHT;
 }
 
 void stop()
@@ -107,11 +111,14 @@ void stop()
   analogWrite(motor1IN1, 0);  
   digitalWrite(motor2IN4, 0); 
   analogWrite(motor2IN3, 0);
+  ledLeft = false;
+  ledRight = false;
+  direction = STOP;
 }
 
-void ledBlink(int delay){
+void ledBlink(){
   //blink with milles delay
-  if (millis() > time + delay){
+  if (millis() > time + delayMs){
     time = millis();
     // switch on off state
     if (blinkState == 0){           
@@ -130,8 +137,7 @@ void ledBlink(int delay){
     }else if (ledLeft == false and ledRight == true){
       digitalWrite(ledL, 0);
       digitalWrite(ledR, blinkState);
-    }
-    else {
+    }else {
       digitalWrite(ledL, 0);
       digitalWrite(ledR, 0);
     }
