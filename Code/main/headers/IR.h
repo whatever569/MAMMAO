@@ -3,12 +3,10 @@
 
 #define irL 5
 #define irR 12
-#include "ULTRASONIC.h"
-#include "MOTOR.h"
-#include "PINS.h"
+#include "headers/ULTRASONIC.h"
+#include "headers/MOTOR.h"
+#include "headers/PINS.h"
 float results[numUltrasonicSensors];
-
-bool isClose(float a, float b, float c);
 
 void irSetup()
 {

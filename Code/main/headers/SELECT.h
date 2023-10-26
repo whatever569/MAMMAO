@@ -1,10 +1,7 @@
+
+#include "headers/DATA.h"
 #ifndef SELECT_H
 #define SELECT_H
-enum Mode{
-  AUTOMATED,
-  LINE_TRACKING,
-  REMOTE
-};
 
 int modeCounter = 1;
 Mode mode = LINE_TRACKING;
