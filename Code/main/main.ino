@@ -12,19 +12,23 @@ void setup() {
   remoteSetup();
 
   motorSetup();
-  pinMode(modeSelector);
+  pinMode(modeSelectorButton, INPUT_PULLUP);
   LCDSetup();
 }
 
 void loop() {  
-modeSelection();
-switch (mode)
-{
-  case AUTOMATED:
-    activate_automated_mode();
-  case LINE_TRACKING:
-    lineTracking();
-  case REMOTE:
-    remote();
-}
+  modeSelection();
+  switch (mode)
+  {
+    case AUTOMATED:
+      activateAutomatedMode();
+      break;
+    case LINE_TRACKING:
+      lineTracking();
+      break;
+    case REMOTE:
+      remote();
+      break;
+  }
+  ledBlink(250);
 }

@@ -23,8 +23,7 @@ unsigned long TSTElapsedMinutes = 0;
 unsigned long TSTElapsedHours = 0;
 
 int carDirection = 0; 
-int drivingMode = 0;      
-int carSpeed = 0;
+int drivingMode = 0;
 
 void LCDSetup() {
   //get_previous_total_system_time();  

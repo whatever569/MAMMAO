@@ -3,10 +3,12 @@
 
 #define irL 5
 #define irR 12
-#include "headers/ULTRASONIC.h"
-#include "headers/MOTOR.h"
-#include "headers/PINS.h"
-int results[numUltrasonicSensors];
+#include "ULTRASONIC.h"
+#include "MOTOR.h"
+#include "PINS.h"
+float results[numUltrasonicSensors];
+
+bool isClose(float a, float b, float c);
 
 void irSetup()
 {
@@ -16,7 +18,7 @@ void irSetup()
 
 void lineTracking()
 {
-  ultrasonicSensorsCheck(results, ultrasonicSensorsPins[], numUltrasonicSensors, numUltrasonicSamples);
+  ultrasonicSensorsCheck(results, ultrasonicSensorsPins, numUltrasonicSensors, numUltrasonicSamples);
   if (isClose(results[0], results[1], results[2]))
   {
     stop();

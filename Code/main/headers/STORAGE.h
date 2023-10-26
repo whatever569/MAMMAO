@@ -8,6 +8,8 @@
 
 // Define the EEPROM address where the total system time is stored
 const int totalSystemTimeAddress = 0;
+unsigned long getPreviousTotalSystemTime();
+void addTimeToEepromTotalSystemTime(unsigned long time);
 
 // Function to add a given time value to the total system time stored in EEPROM
 void addTimeToEepromTotalSystemTime(unsigned long time)
