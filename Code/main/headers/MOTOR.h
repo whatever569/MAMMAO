@@ -2,7 +2,7 @@
 #define MOTOR_H
 
 #include "PINS.h"
-#define MINSPEED 75
+#define MINSPEED 70
 #define MAXSPEED 255
 
 //Led blink delay and state
@@ -13,11 +13,11 @@ bool ledRight = false;
 
 int carSpeed = 0;
 int motorSpeed = MINSPEED;
-int turningSpeed = motorSpeed / 5;
+int turningSpeed = motorSpeed;
 
 void speed(){
   motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
-	turningSpeed = motorSpeed / 6;
+	turningSpeed = motorSpeed / 2;
 }
 // Function to set up the motor pins
 void motorSetup() {
@@ -48,18 +48,18 @@ void backward(){
 }
 // Function to turn left
 void left(){
-  digitalWrite(motor1IN2, turningSpeed);
+  analogWrite(motor1IN2, motorSpeed);
   analogWrite(motor1IN1, 0);
-  digitalWrite(motor2IN4, 0);
+  analogWrite(motor2IN4, 0);
   analogWrite(motor2IN3, motorSpeed);
   ledLeft = true;
   ledRight = false;
 }
 // Function to turn right
 void right(){
-  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN2, 0);
   analogWrite(motor1IN1, motorSpeed);
-  digitalWrite(motor2IN4, turningSpeed);
+  analogWrite(motor2IN4, motorSpeed);
   analogWrite(motor2IN3, 0);
   ledLeft = false;
   ledRight = true;
@@ -67,7 +67,7 @@ void right(){
 // Function to move backward and turn left
 void backwardLeft(){
   digitalWrite(motor1IN1, 0);
-  analogWrite(motor1IN2, motorSpeed);  
+  analogWrite(motor1IN2, turningSpeed);  
   digitalWrite(motor2IN3, 0); 
   analogWrite(motor2IN4, turningSpeed);
   ledLeft = true;
@@ -78,7 +78,7 @@ void backwardRight(){
   digitalWrite(motor1IN1, 0);
   analogWrite(motor1IN2, turningSpeed);  
   digitalWrite(motor2IN3, 0);                                                                                                          
-  analogWrite(motor2IN4, motorSpeed);
+  analogWrite(motor2IN4, turningSpeed);
   ledLeft = false;
   ledRight = true;
 }
