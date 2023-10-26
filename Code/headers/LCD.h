@@ -24,7 +24,7 @@ unsigned long TSTElapsedHours = 0;
 
 int carDirection = 0; 
 int drivingMode = 0;      
-int speed = 0;
+int carSpeed = 0;
 
 void LCDSetup() {
   //get_previous_total_system_time();  
@@ -115,11 +115,11 @@ void LCDMode() {
 void LCDSpeed() {
   //get_speed();
   lcd.setCursor(15, 0);
-  if (speed == 10) {
-    lcd.print("M");   // max speed is shown with a M, because there is only 1 space for printing the speed
+  if (carSpeed == 10) {
+    lcd.print("M");   // max carSpeed is shown with a M, because there is only 1 space for printing the carSpeed
   } 
   else {
-  lcd.print(speed);
+  lcd.print(carSpeed);
   }
 }
 

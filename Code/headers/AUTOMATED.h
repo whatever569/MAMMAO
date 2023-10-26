@@ -9,8 +9,11 @@
 #include "PINS.h"
 #include "ULTRASONIC.h"
 
-#define FRONT_THRESHOLD_DISTANCE 20 
-#define SIDE_THRESHOLD_DISTANCE 10 
+#define FRONT_THRESHOLD_DISTANCE 25 
+#define SIDE_THRESHOLD_DISTANCE 25 
+
+void checkUltrasonicSensors();
+void decideMovement();
 
 // Global Variables
 float results[3];
@@ -86,7 +89,7 @@ if (isMovingBackwardsAndTurning180)
 }
 if (areSensorsTooClose[0] && !areSensorsTooClose[1] && !areSensorsTooClose[2]) {
    // Turn Soft left
-   forwardLeft();
+   left();
    if (debugMode)
    {
     Serial.println("1");
@@ -95,7 +98,7 @@ if (areSensorsTooClose[0] && !areSensorsTooClose[1] && !areSensorsTooClose[2]) {
 else if(!areSensorsTooClose[0] && !areSensorsTooClose[1] && areSensorsTooClose[2])
 {
     // Turn Soft Right
-   forwardRight();
+   right();
    if (debugMode)
    {
     Serial.println("2");
