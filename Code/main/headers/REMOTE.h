@@ -5,9 +5,11 @@
 
 SoftwareSerial BT(7, 8);  // TXD to 7, RXD to 8 in this case
 int input;
+
 void remoteSetup() {
   BT.begin(9600); // Initialize the bt serial connection
 }
+
 void remote() {
   if (BT.available() > 0)
   {
