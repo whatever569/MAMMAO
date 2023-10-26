@@ -19,7 +19,7 @@ void decideMovement();
 float results[3];
 bool areSensorsTooClose[3];
 unsigned long previousMillis = 0;
-long sensorCheckInterval = 500;  // sensor_checksensor_check_interval to check sensors (in milliseconds)
+long sensorCheckInterval = 250;  // sensor_checksensor_check_interval to check sensors (in milliseconds)
 bool isMovingBackwardsAndTurning180 = false;
 unsigned long previousMillisTurn = 0;
 

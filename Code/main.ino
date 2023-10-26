@@ -7,12 +7,12 @@
 #include "headers/LCD.h"
 
 void setup() {
-  Serial.begin(19200);
+  Serial.begin(9600);
 
   remoteSetup();
 
   motorSetup();
-  pinMode(modeSelector);
+  pinMode(modeSelectorButton, INPUT_PULLUP);
   LCDSetup();
 }
 
