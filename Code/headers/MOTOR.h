@@ -2,14 +2,14 @@
 #define MOTOR_H
 
 #include "PINS.h"
-#define MINSPEED 0
+#define MINSPEED 100
 #define MAXSPEED 255
 
-int speed = 0;
-int motorSpeed = 0;
-int turningSpeed = 0;
+int carSpeed = 0;
+int motorSpeed = MINSPEED;
+int turningSpeed = 20;
 
-void carSpeed(){
+void speed(){
   motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
 	turningSpeed = motorSpeed / 4;
 }
@@ -36,8 +36,8 @@ void backward(){
 }
 // Function to turn left
 void left(){
-  digitalWrite(motor1IN2, 0);
-  analogWrite(motor1IN1, turningSpeed);
+  digitalWrite(motor1IN2, turningSpeed);
+  analogWrite(motor1IN1, 0);
   digitalWrite(motor2IN4, 0);
   analogWrite(motor2IN3, motorSpeed);
 }
@@ -45,8 +45,8 @@ void left(){
 void right(){
   digitalWrite(motor1IN2, 0);
   analogWrite(motor1IN1, motorSpeed);
-  digitalWrite(motor2IN4, 0);
-  analogWrite(motor2IN3, turningSpeed);  
+  digitalWrite(motor2IN4, turningSpeed);
+  analogWrite(motor2IN3, 0);
 }
 // Function to move backward and turn left
 void backwardLeft(){
@@ -75,6 +75,14 @@ void forwardRight(){
   analogWrite(motor1IN1, motorSpeed);
   analogWrite(motor2IN4, motorSpeed);
   digitalWrite(motor2IN3, 0);
+}
+
+void stop()
+{
+  digitalWrite(motor1IN2, 0);
+  analogWrite(motor1IN1, 0);  
+  digitalWrite(motor2IN4, 0); 
+  analogWrite(motor2IN3, 0);
 }
 
 #endif
