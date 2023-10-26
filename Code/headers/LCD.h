@@ -148,7 +148,7 @@ void LCDTST () {
     }
   }
   if (savingState == 1) {
-      addTimeToEepromTotalSystemTime(currentTime());
+      writeNewTotalSystemTime(currentTime());
       savingState = 0;
   }
 

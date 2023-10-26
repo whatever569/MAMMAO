@@ -1,17 +1,14 @@
+
+#include "headers/DATA.h"
 #ifndef SELECT_H
 #define SELECT_H
-enum Mode{
-  AUTOMATED,
-  LINE_TRACKING,
-  REMOTE
-};
 
 void modeSelection()
 {
   if(digitalRead(modeButtonPin)==LOW)
   {
     modeCounter++;
-    if counter(modeCounter > 2)
+    if (modeCounter > 2)
     {
       modeCounter = 0;
     }
@@ -34,5 +31,4 @@ void modeSelection()
   }
 }
 
-Mode mode = REMOTE;
 #endif
