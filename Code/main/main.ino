@@ -7,7 +7,7 @@
 #include "headers/LCD.h"
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(19200);
 
   remoteSetup();
 
@@ -17,14 +17,18 @@ void setup() {
 }
 
 void loop() {  
-modeSelection();
-switch (mode)
-{
-  case AUTOMATED:
-    activate_automated_mode();
-  case LINE_TRACKING:
-    lineTracking();
-  case REMOTE:
-    remote();
-}
+  modeSelection();
+  switch (mode)
+  {
+    case AUTOMATED:
+      activateAutomatedMode();
+      break;
+    case LINE_TRACKING:
+      lineTracking();
+      break;
+    case REMOTE:
+      remote();
+      break;
+  }
+  ledBlink(250);
 }
