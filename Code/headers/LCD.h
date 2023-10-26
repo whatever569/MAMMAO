@@ -1,8 +1,9 @@
 #ifndef LCD_h
 #define LCD_h
-
 #include <LiquidCrystal_I2C.h>
-#include "SELECT.h"
+#include "SELECTION.h"
+#include "STORAGE.h"
+#include "PINS.h"
 
 LiquidCrystal_I2C lcd(0x27 ,16, 2); // Setting the I2C adress as 0x27, LCD colums as 16, LCD lines as 2
 
@@ -16,20 +17,17 @@ unsigned long elapsedTime = 0;
 unsigned long previousUpdateTime = 0;
 unsigned long previousElapsedSecond = 0;
 unsigned long LCDSaving = 0;
-unsigned long saving_State = 0;
+unsigned long savingDisplayState = 0;
+unsigned long savingState = 0;
 
 unsigned long TSTElapsedSecond = 0;
 unsigned long TSTElapsedMinutes = 0;
 unsigned long TSTElapsedHours = 0;
 
-int carDirection = 0; 
-int drivingMode = 0;      
-int carSpeed = 0;
-
 void LCDSetup() {
-  //get_previous_total_system_time();  
   lcd.init();   // initialize LCD
   lcd.backlight(); // turn on LCD backlight
+  pinMode(saveButton, INPUT_PULLUP);      
 
   // Setting up the starting display to be: 
   // 'TST 00:00 SPD  '
@@ -47,7 +45,7 @@ void LCDSetup() {
   lcd.print("DIR");
 
   // Set the starting time to the previous time from eeprom 
-  // totalSystemTime = previous_total_system_time;
+  totalSystemTime = getPreviousTotalSystemTime();
 
   // Convert totalSystemTime from seconds to seconds, minutes and hours
   TSTElapsedSecond = totalSystemTime % 60;
@@ -56,6 +54,7 @@ void LCDSetup() {
 }
 
 void updateTimeCount() {
+  elapsedTime = millis();
   if (elapsedTime - previousUpdateTime >= TST_UPDATE_INTERVAL) {
 
     // Counting the elapsed seconds
@@ -105,50 +104,66 @@ unsigned long currentTime () { //called when you save the total system time
 
 void LCDMode() {
   lcd.setCursor(4, 1);
+  
   switch (mode) {
-    case 0: lcd.print("A.s"); break;
-    case 1: lcd.print("S.r"); break;
-    case 2: lcd.print("R.a"); break;
+    case AUTOMATED: lcd.print("A.s"); break;
+    case LINE_TRACKING: lcd.print("S.r"); break;
+    case REMOTE: lcd.print("R.a"); break;
   }
 }
 
-void LCDSpeed() {
-  //get_speed();
+void LCD_speed() {
   lcd.setCursor(15, 0);
-  if (carSpeed == 10) {
-    lcd.print("M");   // max carSpeed is shown with a M, because there is only 1 space for printing the carSpeed
-  } 
-  else {
-  lcd.print(carSpeed);
-  }
+  lcd.print(speed);
 }
 
 void LCDDirection() {
   lcd.setCursor (15, 1);
-  // get_direction();
 
-  switch (carDirection) {        
-    case 0: lcd.print("^"); break;
-    case 1: lcd.print("v"); break;
-    case 2: lcd.print(">"); break;
-    case 3: lcd.print("<"); break;
+  switch (direction) {        
+    case FORWARD: lcd.print("^"); break;
+    case BACKWARD: lcd.print("v"); break;
+    case RIGHT: lcd.print(">"); break;
+    case LEFT: lcd.print("<"); break;
   }
 }
 
 void LCDTST () {
-  updateTimeCount();
-  updateDisplay();
-  currentTime ();
-}
+ updateTimeCount ();
  
+  if (digitalRead(saveButton) == LOW) { // Read wheter the button is pressed
+    savingDisplayState = 1; 
+    savingState = 1;
+    LCDSaving = elapsedTime;
+  }   
+  if (savingDisplayState == 1) {    // Start counting when the button is pressed
+    if (elapsedTime - LCDSaving >= TST_SAVING_INTERVAL && elapsedTime - LCDSaving <= TST_DISPLAYSAVE_TIME) {    // give the microcontroller time to save and keep the text printed for certain time
+      lcd.setCursor(4, 0);
+      lcd.print ("Saved ");  
+    }
+    else if (elapsedTime - LCDSaving > TST_DISPLAYSAVE_TIME) {    //after Saved has been displayed for enough time, revert the TST display back to its normal state.
+    savingDisplayState = 0;
+    lcd.setCursor(4, 0);
+    lcd.print (" 00:00");
+    }
+  }
+  if (savingState == 1) {
+      addTimeToEepromTotalSystemTime(currentTime());
+      savingState = 0;
+  }
+
+  if (savingDisplayState == 0) {
+    updateDisplay ();
+    currentTime ();
+  }
+}
 
 void LCDLoop() {
-  elapsedTime = millis();
   LCDTST();
 
   if (elapsedTime - previousUpdateTime >= TST_LCD_REFRESH) { // refresh the LCD
     LCDMode();
-    LCDSpeed();
+    LCD_speed();
     LCDDirection();
 
     previousUpdateTime = elapsedTime;
