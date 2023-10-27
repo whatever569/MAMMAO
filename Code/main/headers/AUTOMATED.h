@@ -59,7 +59,8 @@ void backwardAndTurn180NonBlocking() {
 }
 void activateAutomatedMode() {
     unsigned long currentMillis = millis();
-
+    motorSpeed = 100;
+    carSpeed = 2;
     // Non-blocking check of ultrasonic sensors
     if (currentMillis - previousMillis >= sensorCheckInterval) {
         previousMillis = currentMillis;

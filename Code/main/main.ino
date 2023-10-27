@@ -10,13 +10,13 @@ void setup() {
   Serial.begin(19200);
 
   remoteSetup();
-
   motorSetup();
   pinMode(modeSelectorButton, INPUT_PULLUP);
   LCDSetup();
 }
 
 void loop() {  
+  ledBlink();
   modeSelection();
   switch (mode)
   {
@@ -30,5 +30,6 @@ void loop() {
       remote();
       break;
   }
-  ledBlink(250);
+  
+  LCDLoop();
 }
