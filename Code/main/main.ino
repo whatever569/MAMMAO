@@ -30,6 +30,6 @@ void loop() {
       remote();
       break;
   }
-  
   LCDLoop();
+  speed();
 }

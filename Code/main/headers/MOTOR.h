@@ -4,6 +4,8 @@
 #include "DATA.h"
 #include "PINS.h"
 
+bool remoteStart = false;
+
 //Led blink delay and state
 int time;
 int blinkState;
@@ -13,7 +15,7 @@ bool ledRight = false;
 void speed()
 {
   motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
-  turningSpeed = motorSpeed;
+  turningSpeed = motorSpeed * 1.5;
 }
 // Function to set up the motor pins
 void motorSetup() {
@@ -46,7 +48,7 @@ void backward(){
 }
 // Function to turn left
 void left(){
-  analogWrite(motor1IN2, motorSpeed);
+  analogWrite(motor1IN2, turningSpeed);
   analogWrite(motor1IN1, 0);
   analogWrite(motor2IN4, 0);
   analogWrite(motor2IN3, motorSpeed);
@@ -58,7 +60,7 @@ void left(){
 void right(){
   analogWrite(motor1IN2, 0);
   analogWrite(motor1IN1, motorSpeed);
-  analogWrite(motor2IN4, motorSpeed);
+  analogWrite(motor2IN4, turningSpeed);
   analogWrite(motor2IN3, 0);
   ledLeft = false;
   ledRight = true;
