@@ -1,7 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#define MINSPEED 75
+#define MINSPEED 65
 #define MAXSPEED 255
 
 // ultrasonic
@@ -9,7 +9,7 @@ const int numUltrasonicSamples = 2;
 const int numUltrasonicSensors = 3;
 
 //flag to enable and disable debug mode, which sends out serial messages
-bool debugMode = true;
+bool debugMode = false;
 
 enum Dir{
   FORWARD,

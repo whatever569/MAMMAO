@@ -11,6 +11,11 @@ void remoteSetup() {
 }
 
 void remote() {
+  if (remoteStart == false)
+  {
+    stop();
+    remoteStart = true;
+  }
   if (BT.available() > 0)
   {
     input = BT.read();
