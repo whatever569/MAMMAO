@@ -37,9 +37,19 @@ void remote() {
       right();
       break;
     }
+    case 'C':
+    {
+      backwardRight();
+      break;
+    }
     case 'G':
     {
       backward();
+      break;
+    }
+    case 'Z':
+    {
+      backwardLeft();
       break;
     }
     case 'L':

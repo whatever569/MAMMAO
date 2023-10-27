@@ -22,6 +22,7 @@ enum Dir{
 int carSpeed = 0;
 int motorSpeed = MINSPEED;
 int turningSpeed = motorSpeed;
+int softTurnSpeed;
 Dir direction = FORWARD; // '^' forward; '<' left; right '>'; 'v' backward
 
 enum Mode{

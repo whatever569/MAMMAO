@@ -16,6 +16,7 @@ void speed()
 {
   motorSpeed = map(carSpeed, 0, 9, MINSPEED, MAXSPEED);
   turningSpeed = motorSpeed * 1.5;
+  softTurnSpeed = motorSpeed / 2;
 }
 // Function to set up the motor pins
 void motorSetup() {
@@ -69,9 +70,9 @@ void right(){
 // Function to move backward and turn left
 void backwardLeft(){
   digitalWrite(motor1IN1, 0);
-  analogWrite(motor1IN2, turningSpeed);  
+  analogWrite(motor1IN2, softTurnSpeed);  
   digitalWrite(motor2IN3, 0); 
-  analogWrite(motor2IN4, turningSpeed);
+  analogWrite(motor2IN4, motorSpeed);
   ledLeft = true;
   ledRight = false;
   direction = NOT_RIGHT;
@@ -79,17 +80,17 @@ void backwardLeft(){
 // Function to move backward and turn right
 void backwardRight(){
   digitalWrite(motor1IN1, 0);
-  analogWrite(motor1IN2, turningSpeed);  
+  analogWrite(motor1IN2, motorSpeed);  
   digitalWrite(motor2IN3, 0);                                                                                                          
-  analogWrite(motor2IN4, turningSpeed);
+  analogWrite(motor2IN4, softTurnSpeed);
   ledLeft = false;
   ledRight = true;
   direction = RIGHT;
 }
 // Function to move forward and turn left
 void forwardLeft(){
-  digitalWrite(motor1IN1, 0);
-  analogWrite(motor1IN2, motorSpeed); 
+  analogWrite(motor1IN1, softTurnSpeed);
+  analogWrite(motor1IN2, 0); 
   analogWrite(motor2IN3, motorSpeed);
   digitalWrite(motor2IN4, 0);
   ledLeft = true;
@@ -98,10 +99,10 @@ void forwardLeft(){
 }
 // Function to move forward and turn right
 void forwardRight(){
-  digitalWrite(motor1IN2, 0);
   analogWrite(motor1IN1, motorSpeed);
-  analogWrite(motor2IN4, motorSpeed);
-  digitalWrite(motor2IN3, 0);
+  analogWrite(motor1IN2, 0);
+  analogWrite(motor2IN3, softTurnSpeed);
+  analogWrite(motor2IN4, 0);
   ledLeft = false;
   ledRight = true;
   direction = RIGHT;
