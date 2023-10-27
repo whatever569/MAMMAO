@@ -15,4 +15,8 @@ const int motor1IN2 = 10;
 const int motor2IN3 = 6;
 const int motor2IN4 = 9;
 
+
+#define irL 5
+#define irR 12
+
 #endif
