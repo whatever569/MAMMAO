@@ -1,11 +1,12 @@
 #ifndef PINS_H
 #define PINS_H
 
-//buttons
-const int modeSelectorButtonPin = A3;
+const int ledL = A1;
+const int ledR = A2;
+
+const int modeSelectorButton = A3;
 const int saveButton = 20;
 
-//ultrasonic
 const int ultrasonicSensorsPins[] = {2, 3, 4};
 
 // Define constants for motor pins

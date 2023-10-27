@@ -1,17 +1,27 @@
-
-#include "headers/DATA.h"
 #ifndef SELECT_H
 #define SELECT_H
 
+#include "DATA.h"
+
+int buttonState;
+int prev = 1;
+
 void modeSelection()
 {
-  if(digitalRead(modeButtonPin)==LOW)
+  buttonState = digitalRead(modeSelectorButton);
+  if(buttonState == 0 && prev == 1)
   {
     modeCounter++;
     if (modeCounter > 2)
     {
       modeCounter = 0;
     }
+    Serial.println("Button pressed");
+    prev = buttonState;
+  }
+  if (buttonState == 1)
+  {
+    prev = buttonState;
   }
 
   switch (modeCounter)
@@ -26,7 +36,7 @@ void modeSelection()
       mode = REMOTE;
       break;
     default:
-      mode = AUTOMATED; 
+      mode = AUTOMATED;
       break;
   }
 }

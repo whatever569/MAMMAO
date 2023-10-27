@@ -1,7 +1,8 @@
 #ifndef LCD_h
 #define LCD_h
 #include <LiquidCrystal_I2C.h>
-#include "SELECTION.h"
+#include "DATA.h"
+#include "SELECT.h"
 #include "STORAGE.h"
 #include "PINS.h"
 
@@ -46,7 +47,7 @@ void LCDSetup() {
 
   // Set the starting time to the previous time from eeprom 
   totalSystemTime = getPreviousTotalSystemTime();
-
+  Serial.println(totalSystemTime);
   // Convert totalSystemTime from seconds to seconds, minutes and hours
   TSTElapsedSecond = totalSystemTime % 60;
   TSTElapsedMinutes = (totalSystemTime % 3600)/60;
@@ -112,9 +113,9 @@ void LCDMode() {
   }
 }
 
-void LCD_speed() {
+void LCDSpeed() {
   lcd.setCursor(15, 0);
-  lcd.print(speed);
+  lcd.print(carSpeed);
 }
 
 void LCDDirection() {
@@ -122,9 +123,10 @@ void LCDDirection() {
 
   switch (direction) {        
     case FORWARD: lcd.print("^"); break;
-    case BACKWARD: lcd.print("v"); break;
+    case BACK: lcd.print("v"); break;
     case RIGHT: lcd.print(">"); break;
-    case LEFT: lcd.print("<"); break;
+    case NOT_RIGHT: lcd.print("<"); break;
+    case STOP: lcd.print("-"); break;
   }
 }
 
@@ -148,7 +150,7 @@ void LCDTST () {
     }
   }
   if (savingState == 1) {
-      writeNewTotalSystemTime(currentTime());
+      addTimeToEepromTotalSystemTime(currentTime());
       savingState = 0;
   }
 
@@ -163,7 +165,7 @@ void LCDLoop() {
 
   if (elapsedTime - previousUpdateTime >= TST_LCD_REFRESH) { // refresh the LCD
     LCDMode();
-    LCD_speed();
+    LCDSpeed();
     LCDDirection();
 
     previousUpdateTime = elapsedTime;
