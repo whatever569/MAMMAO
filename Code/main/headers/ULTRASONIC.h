@@ -68,6 +68,7 @@ void ultrasonicSensorsCheck(float results[],
             }
 
             tempResult += distance;
+            //Delay to prevent errors
             delay(10);
         }
         // Update the results array with the average of the calculated for sensor i distance

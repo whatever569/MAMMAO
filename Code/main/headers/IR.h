@@ -1,8 +1,6 @@
 #ifndef IR_H
 #define IR_H
 
-#define irL 5
-#define irR 12
 #include "ULTRASONIC.h"
 #include "MOTOR.h"
 #include "PINS.h"
