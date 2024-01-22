@@ -6,7 +6,6 @@ int main()
 {
 	remoteSetup();
 	motor_init();
-	SoftSerialInit();
 	ultrasonicSetup();
 	sei();
 	
