@@ -1,423 +1,201 @@
-/*
- * SoftSerial.h
- *
- * Created: 21-9-2021 20:07:38
- *  Author: Hugo Arends
- */ 
-#ifndef SOFTSERIAL_H_
-#define SOFTSERIAL_H_
+#ifndef SOFTSERIAL_H
+#define SOFTSERIAL_H
 
-/*
- * SoftSerial.c
- *
- * Half duplex interrupt driven UART implementation.
- * Supports 9600 bps only.
- * RX pin is PD2
- * TX pin is PD3
- *
- * This SoftSerial driver combines the drivers as implemented in application
- * notes AVR304 and AVR306.
- *
- * Resources used by this driver are TC0 and INT0.
- *
- * Created: 21-9-2021 20:07:24
- *  Author: Hugo Arends
- */ 
-#include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/io.h>
+#include <util/delay.h>
 
-// SoftSerial Buffer Defines
-#define SOFTSERIAL_RX_BUFFER_SIZE 32 // 2,4,8,16,32,64,128 or 256 bytes
-#define SOFTSERIAL_TX_BUFFER_SIZE 32 // 2,4,8,16,32,64,128 or 256 bytes
+// UART Buffer Defines
+// Supported sizes: 2,4,8,16,32,64,128 or 256 bytes
+#define USART_RX_BUFFER_SIZE (64)
+#define USART_TX_BUFFER_SIZE (64)
 
-#define SOFTSERIAL_RX_BUFFER_MASK (SOFTSERIAL_RX_BUFFER_SIZE - 1)
-#if (SOFTSERIAL_RX_BUFFER_SIZE & SOFTSERIAL_RX_BUFFER_MASK)
+// Buffer size checks
+#define USART_RX_BUFFER_MASK (USART_RX_BUFFER_SIZE - 1)
+#if (USART_RX_BUFFER_SIZE & USART_RX_BUFFER_MASK)
 #error RX buffer size is not a power of 2
 #endif
-
-#define SOFTSERIAL_TX_BUFFER_MASK (SOFTSERIAL_TX_BUFFER_SIZE - 1)
-#if (SOFTSERIAL_TX_BUFFER_SIZE & SOFTSERIAL_TX_BUFFER_MASK)
+#define USART_TX_BUFFER_MASK (USART_TX_BUFFER_SIZE - 1)
+#if (USART_TX_BUFFER_SIZE & USART_TX_BUFFER_MASK)
 #error TX buffer size is not a power of 2
 #endif
 
-// Static Variables
-static char SoftSerial_RxBuf[SOFTSERIAL_RX_BUFFER_SIZE];
-static volatile char SoftSerial_RxHead;
-static volatile char SoftSerial_RxTail;
+// Define baud-rate
+#define BAUDRATE 9600
+#define myUBRR ((F_CPU / 16UL / BAUDRATE) - 1)
 
-static char SoftSerial_TxBuf[SOFTSERIAL_TX_BUFFER_SIZE];
-static volatile char SoftSerial_TxHead;
-static volatile char SoftSerial_TxTail;
+// Static variables 
+static char USART_RxBuf[USART_RX_BUFFER_SIZE];
+static volatile unsigned char USART_RxHead;
+static volatile unsigned char USART_RxTail;
+static char USART_TxBuf[USART_TX_BUFFER_SIZE];
+static volatile unsigned char USART_TxHead;
+static volatile unsigned char USART_TxTail;
 
-#define TX_PIN          PD6
-#define RX_PIN          PD2 // Must be INT0
-//#define DBG_PIN         PD4
+// Function prototypes
+void clearUSART();
+void usart0_init(void);
+char usart0_receive(void);
+void usart0_transmit(char data);
+unsigned char usart0_nUnread(void);
+void usart0_transmit_str(char *str);
 
-#define SOFTSERIAL_DDR  DDRD
-#define SOFTSERIAL_PORT PORTD
-#define SOFTSERIAL_PIN  PIND
-
-#define SET_TX_PIN()    (SOFTSERIAL_PORT |= (1 << TX_PIN))
-#define CLEAR_TX_PIN()  (SOFTSERIAL_PORT &= ~(1 << TX_PIN))
-#define GET_RX_PIN()    (SOFTSERIAL_PIN & (1 << RX_PIN ))
-
-// If debugging is enabled, use a logic analyzer or a scope to visualize the 
-// time spent in the ISRs on the DBG_PIN
-//#define DBG_ENABLE
-
-typedef enum
+/*
+ * Initialize the USART.
+ */
+void usart0_init(void)
 {
-    IDLE,              // Idle state, waiting to transmit or receive
-    TRANSMIT,          // Transmitting a byte; progress is indicated by SoftSerialTXBitCount
-    TRANSMIT_STOP_BIT, // Transmitting stop bit.
-    RECEIVE,           // Receiving a byte; progress is indicated by SoftSerialRXBitCount
+    // Configure the baud rate
+    UBRR0H = (unsigned char)(myUBRR >> 8);
+    UBRR0L = (unsigned char)myUBRR;
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+    // Enable USART receiver and transmitter
+    UCSR0B = ((1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0));
 
-}SoftSerialStates_t;
-
-static volatile SoftSerialStates_t state;           // Holds the state of the SoftSerial
-static volatile unsigned char SoftSerialTXBits;     // Data to be transmitted.
-static volatile unsigned char SoftSerialTXBitCount; // TX bit counter.
-static volatile unsigned char SoftSerialRXBits;     // Storage for received bits.
-static volatile unsigned char SoftSerialRXBitCount; // RX bit counter.
-
-ISR(INT0_vect)
-{
-
-/*#ifdef DBG_ENABLE
-    PORTD |= (1 << DBG_PIN);
-#endif*/
-
-    state = RECEIVE;
-
-    // Disable interrupts while receiving bits
-    EIMSK &= ~(1 << INT0);
-
-    // Disable timer interrupts to update the registers
-    TIMSK0 &= ~(1 << OCIE0A);
-
-    // Reset the prescaler, stopping the timer/counter
-    TCCR0B &= ~((1 << CS01) | ( 1 << CS00 ));
-
-    // This ISR takes time to execute. Compensate for this time by starting 
-    // from 1, which is equal to approximately 4 us ((1/16MHz) * 64)
-    TCNT0 = 1;
-
-    // Count 1.5 period in the future
-    OCR0A = 39;
-
-    // Set prescaler and start the timer/counter
-    TCCR0B |= (1 << CS01) | (1 << CS00);
-
-    // Clear received bit counter
-    SoftSerialRXBitCount = 0;
-    SoftSerialRXBits = 0;
-    
-    // Clear the interrupt flag and enable timer/counter interrupt
-    TIFR0 |= (1 << OCF0A);
-    TIMSK0 |= (1 << OCIE0A);
-
-#ifdef DBG_ENABLE
-    PORTD &= ~(1 << DBG_PIN);
-#endif
-
-}
-
-ISR(TIMER0_COMPA_vect)
-{
-
-#ifdef DBG_ENABLE
-    PORTD |= (1 << DBG_PIN);
-#endif
-
-    switch (state) 
-    {
-    // Transmitting a byte
-    case TRANSMIT:
-    {
-        // All bits not send?
-        if(SoftSerialTXBitCount < 8 )
-        {
-            // Is the LSB logic 1?
-            if(SoftSerialTXBits & 0x01) 
-            {           
-                SET_TX_PIN();
-            }
-            else 
-            {
-                CLEAR_TX_PIN();
-            }
-
-            // Select the next bit and count the number of transmitted bits
-            // LSB first
-            SoftSerialTXBits = SoftSerialTXBits >> 1;
-            SoftSerialTXBitCount++;
-        }
-        else 
-        {
-            // All bits transmitted, send the stop bit
-            SET_TX_PIN();
-
-            state = TRANSMIT_STOP_BIT;
-        }
-    }
-    break;
-
-    // Transmitting stop bit
-    case TRANSMIT_STOP_BIT:
-    {
-        // More data in the buffer for transmitting?
-        if(SoftSerial_TxHead != SoftSerial_TxTail)
-        {
-            unsigned char tmptail;
-
-            // Calculate buffer index
-            tmptail = ( SoftSerial_TxTail + 1 ) & SOFTSERIAL_TX_BUFFER_MASK;
-        
-            // Store new index
-            SoftSerial_TxTail = tmptail;
-        
-            // Start transmission
-            state = TRANSMIT;
-            
-            // Clear the TX pin marking the beginning of the start bit
-            PORTD &= ~(1 << TX_PIN);
-
-            // Put the byte in the TX buffer
-            SoftSerialTXBits = SoftSerial_TxBuf[tmptail];
-            SoftSerialTXBitCount = 0;
-        }
-        else
-        {
-            // No more data in transmit buffer
-            // Disable timer interrupts
-            TIMSK0 &= ~(1 << OCIE0A);
-
-            state = IDLE;
-            
-            // Reset external interrupt flag (if any) and enable external 
-            // interrupt
-            EIFR |= (1 << INTF0);
-            EIMSK |= (1 << INT0);
-        }
-    }
-    break;
-
-    // Receiving a byte
-    case RECEIVE:
-    {
-        // Count 1 period in the future
-        OCR0A = 25;
-        
-        // Not all bits received (LSB first)?
-        if(SoftSerialRXBitCount < 8) 
-        {
-            // Select the next bit position
-            SoftSerialRXBitCount++;
-            SoftSerialRXBits = SoftSerialRXBits >> 1;
-
-            // Is the RX pin set?
-            if(GET_RX_PIN() != 0)
-            {
-                // Also set the current bit position
-                SoftSerialRXBits |= 0x80;
-            }
-        }
-        else 
-        {
-            // All bits received
-            // Disable timer/counter interrupt
-            TIMSK0 &= ~(1 << OCIE0A);
-
-            // Reset external interrupt flag (if any) and enable external
-            // interrupt
-            EIFR |= (1 << INTF0);
-            EIMSK |= (1 << INT0);
-
-            unsigned char tmphead;
-    
-            // Calculate buffer index
-            tmphead = (SoftSerial_RxHead + 1) & SOFTSERIAL_RX_BUFFER_MASK;
-    
-            // Store new index
-            SoftSerial_RxHead = tmphead;
-    
-            if (tmphead == SoftSerial_RxTail)
-            {
-                // ERROR! Receive buffer overflow
-            }
-    
-            // Store received data in buffer
-            SoftSerial_RxBuf[tmphead] = SoftSerialRXBits;
-
-            state = IDLE;
-        }
-    }
-    break;
-    default:        
-    {
-        // Error, unknown state
-        // Return to known state
-        state = IDLE;
-    }
-    break;
-    }
-
-#ifdef DBG_ENABLE
-    PORTD &= ~(1 << DBG_PIN);
-#endif
-
-}
-
-void SoftSerialInit(void)
-{
     // Flush buffers
-    char  x = 0;
-    SoftSerial_RxTail = x;
-    SoftSerial_RxHead = x;
-    SoftSerial_TxTail = x;
-    SoftSerial_TxHead = x;
-
-    // RX pin input with pullup enabled
-    DDRD &= ~(1 << RX_PIN);
-    PORTD |= (1 << RX_PIN);
-    
-    // TX pin output and set pin high
-    DDRD |= (1 << TX_PIN);
-    PORTD |= (1 << TX_PIN);
-
-#ifdef DBG_ENABLE
-    DDRD |= (1 << DBG_PIN);
-#endif
-
-    // Initialize Timer/Counter 0
-    // - Disable interrupt
-    // - CTC mode with TOP in OCR0A
-    // - 64 prescaler
-    // 
-    // Note. At 16 MHz, the timer now counts at 250 kHz
-    TIMSK0 &= ~(1 << OCIE0A);
-    TCCR0A |= (1 << WGM01);
-    TCCR0B |= (1 << CS01) | (1 << CS00);
-
-    // Initialize external interrupt
-    // - The falling edge of INT0 generates an interrupt request
-    // - Reset interrupt flag
-    // - Enable interrupt
-    EICRA |= (1 << ISC01);
-    EIFR |= (1 << INTF0);
-    EIMSK |= (1 << INT0);
-
-    // Set initial state
-    state = IDLE;
+    unsigned char x = 0;
+    USART_RxTail = x;
+    USART_RxHead = x;
+    USART_TxTail = x;
+    USART_TxHead = x;
 }
 
-char SoftSerialReceiveByte(void)
+/*
+ * Interrupt handler for received data.
+ * Data is placed in the receive buffer.
+ */
+ISR(USART_RX_vect)
+{
+    char data;
+    unsigned char tmphead;
+
+    // Read the received data
+    data = UDR0;
+
+    // Calculate buffer index
+    tmphead = (USART_RxHead + 1) & USART_RX_BUFFER_MASK;
+
+    // Store new index
+    USART_RxHead = tmphead;
+
+    if (tmphead == USART_RxTail)
+    {
+        // ERROR! Receive buffer overflow
+        // Handle the overflow condition (e.g., set an overflow flag or reset the buffer)
+    }
+
+    // Store received data in buffer
+    USART_RxBuf[tmphead] = data;
+}
+
+/*
+ * Interrupt handler for transmit data.
+ * Data is read from the transmit buffer. If all data was transmitted,
+ * transmit interrupts are disabled.
+ */
+ISR(USART_UDRE_vect)
 {
     unsigned char tmptail;
-    
-    // Wait for incoming data
-    while (SoftSerial_RxHead == SoftSerial_RxTail)
-    {;}
-    
-    // Calculate buffer index
-    tmptail = (SoftSerial_RxTail + 1) & SOFTSERIAL_RX_BUFFER_MASK;
-    
-    // Store new index
-    SoftSerial_RxTail = tmptail;
-    
-    // Return data
-    return SoftSerial_RxBuf[tmptail];
+
+    // Check if all data is transmitted
+    if (USART_TxHead != USART_TxTail)
+    {
+        // Calculate buffer index
+        tmptail = (USART_TxTail + 1) & USART_TX_BUFFER_MASK;
+
+        // Store new index
+        USART_TxTail = tmptail;
+
+        // Start transmission
+        UDR0 = USART_TxBuf[tmptail];
+    }
+    else
+    {
+        // Disable UDRE interrupt
+        UCSR0B &= ~(1 << UDRIE0);
+    }
 }
 
-void SoftSerialTransmitByte(char data)
+/*
+ * This function returns a new byte from the receive buffer.
+ * It will wait for data to be available! Use the function
+ * usart0_nUnread() to make sure data is available.
+ */
+char usart0_receive(void)
+{
+    unsigned char tmptail;
+    // Wait for incoming data
+    while (USART_RxHead == USART_RxTail)
+        ;
+
+    // Calculate buffer index
+    tmptail = (USART_RxTail + 1) & USART_RX_BUFFER_MASK;
+
+    // Store new index
+    USART_RxTail = tmptail;
+
+    // Return data
+    return USART_RxBuf[tmptail];
+}
+
+/*
+ * This function places a new byte in the transmit buffer
+ * and starts a new transmission by enabling transmit interrupt.
+ */
+void usart0_transmit(char data)
 {
     unsigned char tmphead;
-    
+
     // Calculate buffer index
-    tmphead = (SoftSerial_TxHead + 1) & SOFTSERIAL_TX_BUFFER_MASK;
-    
+    tmphead = (USART_TxHead + 1) & USART_TX_BUFFER_MASK;
+
     // Wait for free space in buffer
-    while (tmphead == SoftSerial_TxTail)
-    {;}
-    
+    while (tmphead == USART_TxTail)
+        ;
+
     // Store data in buffer
-    SoftSerial_TxBuf[tmphead] = data;
-    
+    USART_TxBuf[tmphead] = data;
+
     // Store new index
-    SoftSerial_TxHead = tmphead;
+    USART_TxHead = tmphead;
 
-    if(state == IDLE)
-    {
-        unsigned char tmptail;
-
-        // Calculate buffer index
-        tmptail = (SoftSerial_TxTail + 1) & SOFTSERIAL_TX_BUFFER_MASK;
-        
-        // Store new index
-        SoftSerial_TxTail = tmptail;
-
-        // Set new state
-        state = TRANSMIT;
-
-        // Disable reception
-        EIMSK &= ~(1 << INT0);
-
-        // Put the byte in the TX buffer
-        SoftSerialTXBits = SoftSerial_TxBuf[tmptail];
-        SoftSerialTXBitCount = 0;
-
-        // Reset the prescaler, stopping the timer/counter
-        TCCR0B &= ~((1 << CS01) | ( 1 << CS00 ));
-        
-        // Reset counter 
-        TCNT0 = 0;
-
-        // Generate interrupts at (16 MHz / 64) / (25+1) = 9615.4 Hz
-        // (every 0.104 ms)
-        OCR0A = 25;
-        
-        // Set prescaler and start the timer/counter
-        TCCR0B |= (1 << CS01) | (1 << CS00);
-
-        // Clear the TX pin marking the beginning of the start bit
-        PORTD &= ~(1 << TX_PIN);
-
-        // Enable timer/counter interrupt
-        TIMSK0 |= (1 << OCIE0A);
-    }
-}
-
-void SoftSerialReceiveString(char *str)
-{
-    uint8_t t = 0;
-    while ((str[t] = SoftSerialReceiveByte()) != '\n')
-    {
-        t++;
-    }
-    
-    str[t++] = '\n';
-    str[t] = '\0';
-}
-
-void SoftSerialTransmitString(char *str)
-{
-    while(*str)
-    {
-        SoftSerialTransmitByte(*str++);
-    }
+    // Enable UDRE interrupt
+    UCSR0B |= (1 << UDRIE0);
 }
 
 /*
  * This function returns the number of unread bytes in the receive buffer.
  */
-unsigned char SoftSerialUnread(void)
+unsigned char usart0_nUnread(void)
 {
-    if(SoftSerial_RxHead == SoftSerial_RxTail)
-        return 0;
-    else if(SoftSerial_RxHead > SoftSerial_RxTail)
-        return SoftSerial_RxHead - SoftSerial_RxTail;
+    if (USART_RxHead >= USART_RxTail)
+        return USART_RxHead - USART_RxTail;
     else
-        return SOFTSERIAL_RX_BUFFER_SIZE - SoftSerial_RxTail + SoftSerial_RxHead;
+        return USART_RX_BUFFER_SIZE - USART_RxTail + USART_RxHead;
 }
 
-#endif /* SOFTSERIAL_H_ */
+/*
+ * Transmits a string of characters to the USART.
+ * The string must be terminated with '\0'.
+ *
+ * - This function uses the function usart0_transmit() to
+ * transmit a byte via the USART
+ * - Bytes are transmitted until the terminator
+ * character '\0' is detected. Then the function returns.
+ */
+void usart0_transmit_str(char *str)
+{
+    while (*str)
+    {
+        usart0_transmit(*str++);
+    }
+}
+
+void clearUSART() {
+	UCSR0B = 0;
+	UCSR0A = 0;
+	UCSR0C = 0;
+	UBRR0H = 0;
+	UBRR0L = 0;
+}
+#endif

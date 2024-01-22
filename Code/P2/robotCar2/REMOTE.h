@@ -37,13 +37,14 @@ void remoteSetup()
 {
 	DDRD |= (1<<DDD2);
 	DDRB |= (1<<DDB0);
+	usart0_init();
 }
 
 void remote()
 {
-	if (SoftSerialUnread() > 0)
+	if (usart0_nUnread() > 0)
 	{
-		char data = SoftSerialReceiveByte();
+		char data = usart0_receive();
 		switch(data)
 		{
 			case 'F':
@@ -69,5 +70,6 @@ void remote()
 				break;
 		}
 	}
+
 }
 #endif
