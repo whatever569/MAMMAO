@@ -16,7 +16,7 @@
     <Name>robotCar2</Name>
     <RootNamespace>robotCar2</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <KeepTimersRunning>true</KeepTimersRunning>
+    <KeepTimersRunning>false</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
@@ -150,9 +150,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="REMOTE.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="SoftSerial.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="SoftSerial.h">

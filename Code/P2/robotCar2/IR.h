@@ -2,22 +2,60 @@
 #define IR_H
 #include "MOTOR.h"
 
-void irSetup();
-void lineTracking();
-
-void irSetup()
+bool close()
 {
-	DDRB &= ~(1 << irR);
-	DDRB &= ~(1 << irL);
+	checkUltrasonicSensors();
+	if (distance[0] < 25 || distance[1] < 25 || distance[2] < 25)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void lineTracking()
 {
-	if (PORTB |= (PORTB4))
-		right();
-	else if (PORTB |= (PORTB5))
-		left();
+	int lineTrackingModeSet;
+	
+	
+	/*if (PINB & (1<<PINB4))
+	{	
+		lineTrackingModeSet = 0;
+	} 
+	else if (PIND & (1<<PIND6))
+	{
+		lineTrackingModeSet = 1;
+	}
+	
+	
+	if (lineTrackingModeSet == 1)
+	{
+		softRight();
+	} 
 	else
+	{
+		softLeft();
+	}*/
+	
+	if (PINB &(1<<PINB4))
+	{
+		speed = 255;
+		right();
+	}
+	
+	else if (PINB & (1<<PINB0))
+	{
+		speed = 255;
+		left();
+	}
+	
+	else
+	{
+		speed = 50;
 		forward();
+	}
+		
 }
 #endif

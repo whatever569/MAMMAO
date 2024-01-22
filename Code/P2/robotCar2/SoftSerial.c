@@ -41,7 +41,7 @@ static volatile char SoftSerial_TxHead;
 static volatile char SoftSerial_TxTail;
 
 #define TX_PIN          PB0
-#define RX_PIN          PD7 // Must be INT0
+#define RX_PIN          PD2 // Must be INT0
 #define DBG_PIN         PD4
 
 #define SOFTSERIAL_DDR  DDRD

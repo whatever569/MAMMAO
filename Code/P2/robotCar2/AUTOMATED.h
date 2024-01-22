@@ -42,11 +42,11 @@
 		uint32_t currentMillis = ms;
 		speed = 2;
 		// Non-blocking check of ultrasonic sensors
-		if (currentMillis - previousMillis >= sensorCheckInterval) {
-			previousMillis = currentMillis;
+		//if (currentMillis - previousMillis >= sensorCheckInterval) {
+			//previousMillis = currentMillis;
 			checkUltrasonicSensors();
 			decideMovement();
-		}
+		//}
 	}
 
 	void checkUltrasonicSensors() {
@@ -99,7 +99,7 @@ ISR(PCINT2_vect) {
 		ultrasonicState = echoUp;
 	}
 	
-	else if ((PIND & (1<<ultrasonicPins[currentSensor])) == 0 && (ultrasonicState == echoUp)) {
+	else if ((PIND && (1<<ultrasonicPins[currentSensor])) == 0 && (ultrasonicState == echoUp)) {
 		ultrasonicState = echoDown;
 	}
 }
@@ -145,7 +145,7 @@ void ultrasonicCheck () {
 		
 		// turn on trigger for 10 microseconds
 		PORTD |= (1<<ultrasonicPins[currentSensor]);
-		_delay_us(12);
+		_delay_us(10);		
 		PORTD &= ~(1<<ultrasonicPins[currentSensor]);
 		
 		DDRD &=  ~(1<<ultrasonicPins[currentSensor]);		// ultrasonic sensor to echo

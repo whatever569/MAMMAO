@@ -1,6 +1,6 @@
 ﻿#ifndef DATA_H_
 #define DATA_H_
-#define F_CPU 16000000UL
+
 #include <avr/interrupt.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -8,7 +8,7 @@
 typedef enum { FORWARD, LEFT, RIGHT, BACKWARD, SOFTLEFT, SOFTRIGHT, STOPPED } Direction;
 	
 #define irR DDB4
-#define irL DDB5
+#define irL DDD6
 
 #define LED_right DDC1
 #define LED_left DDC2
@@ -24,7 +24,7 @@ double startTimer;
 volatile uint32_t ms;
 volatile int currentSensor;
 
-const int ultrasonicPins[NUMBER_OF_USS] = {2, 4, 5};
+const int ultrasonicPins[NUMBER_OF_USS] = {7, 4, 5};
 
 typedef enum {
 	trigger,
@@ -61,7 +61,7 @@ State currentState = backwar;
 Direction direction = STOPPED;
 uint8_t speed = 255;  //max speed
 
-#define SOFT_SPEED 75 //speed for the slower side when doing soft left and right
+#define SOFT_SPEED speed/3.4 //speed for the slower side when doing soft left and right
 #define DIR_FORWARD 0
 #define DIR_BACKWARD 1
 #define OFF 0

@@ -3,13 +3,6 @@
 #include "SoftSerial.h"
 #include "AUTOMATED.h"
 
-/*
- * REMOTE.c
- *
- * Created: 19/01/2024 15:40:23
- *  Author: Attila Dénes Gulyás
- */ 
-
 //int main(void)
 //{
 //DDRB = (1<<DDB5);
@@ -39,4 +32,42 @@
 //}
 //}
 //}
+
+void remoteSetup()
+{
+	DDRD |= (1<<DDD2);
+	DDRB |= (1<<DDB0);
+}
+
+void remote()
+{
+	if (SoftSerialUnread() > 0)
+	{
+		char data = SoftSerialReceiveByte();
+		switch(data)
+		{
+			case 'F':
+				forward();
+				break;
+			case 'E':
+				softRight();
+				break;
+			case 'R':
+				right();
+				break;
+			case 'G':
+				backward();
+				break;
+			case 'L':
+				left();
+				break;
+			case 'Q':
+				softLeft();
+				break;
+			case 'S':
+				stop();
+				break;
+		}
+	}
+}
 #endif
