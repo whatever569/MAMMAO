@@ -1,16 +1,23 @@
-﻿/*
- * IncFile1.h
- *
- * Created: 09/01/2024 12:21:58
- *  Author: Attila Dénes Gulyás
- */ 
+#ifndef IR_H
+#define IR_H
+#include "MOTOR.h"
 
+void irSetup();
+void lineTracking();
 
-#ifndef IR
-#define IR
+void irSetup()
+{
+	DDRB &= ~(1 << irR);
+	DDRB &= ~(1 << irL);
+}
 
-	void irSetup();
-	void lineTracking();
-
-
-#endif /* INCFILE1_H_ */
+void lineTracking()
+{
+	if (PORTB |= (PORTB4))
+		right();
+	else if (PORTB |= (PORTB5))
+		left();
+	else
+		forward();
+}
+#endif

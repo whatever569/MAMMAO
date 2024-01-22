@@ -134,22 +134,22 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IR.h">
+    <Compile Include="AUTOMATED.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="IR.c">
+    <Compile Include="DATA.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="IR.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="MOTOR.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="MOTOR.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="PINS.c">
+    <Compile Include="REMOTE.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="SoftSerial.c">

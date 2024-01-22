@@ -60,7 +60,7 @@ typedef enum
 {
     IDLE,              // Idle state, waiting to transmit or receive
     TRANSMIT,          // Transmitting a byte; progress is indicated by SoftSerialTXBitCount
-    TRANSMIT_STOP_BIT, // Transmitting stop bit. 
+    TRANSMIT_STOP_BIT, // Transmitting stop bit.
     RECEIVE,           // Receiving a byte; progress is indicated by SoftSerialRXBitCount
 
 }SoftSerialStates_t;
